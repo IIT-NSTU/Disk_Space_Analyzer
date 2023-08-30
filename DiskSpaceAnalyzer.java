@@ -3,52 +3,66 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
-public class Project {
+public class DiskSpaceAnalyzer {
     public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+
         boolean running = true;
 
         while (running) {
-            System.out.print("Enter path: ");
-            String path = scanner.nextLine();
-            System.out.println();
+            System.out.println("Select an option:");
+            System.out.println("1. Visualize Files");
+            System.out.println("2. Search Files");
+            System.out.println("3. Show Duplicate Files");
+            System.out.println("4. Backup Files");
+            System.out.println("5. Quit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
 
-            File file = new File(path);
-
-            if (file.exists()) {
-                getFileInformation(file);
-                System.out.println();
-                visualizeDiskInfo(file, 0);
-
-                boolean searching = true;
-                while (searching) {
-                    System.out.print("Do you want to search for files (yes/no)? ");
-                    String searchChoice = scanner.nextLine();
-
-                    if (searchChoice.equalsIgnoreCase("yes")) {
-                        System.out.print("Enter search keyword: ");
-                        String keyword = scanner.nextLine();
-                        searchFiles(file, keyword,true);
-                    } else if (searchChoice.equalsIgnoreCase("no")) {
-                        searching = false;
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter path to visualize: ");
+                    String visualizePath = scanner.nextLine();
+                    visualizeDiskInfo(new File(visualizePath), 0);
+                    break;
+                case 2:
+                    System.out.print("Enter path to search: ");
+                    String searchPath = scanner.nextLine();
+                    System.out.print("Enter search keyword: ");
+                    String keyword = scanner.nextLine();
+                    searchFiles(new File(searchPath), keyword, true);
+                    break;
+                case 3:
+                    System.out.print("Enter path to detect duplicate files: ");
+                    String duplicatePath = scanner.nextLine();
+                    DuplicateFileDetector.detectDuplicates(new File(duplicatePath));
+                    DuplicateFileDetector.printDuplicateFile();
+                    break;
+                case 4:
+                    System.out.print("Enter source directory path: ");
+                    String sourceFolderPath = scanner.nextLine();
+                    System.out.print("Enter backup directory path: ");
+                    String backupFolderPath = scanner.nextLine();
+                    FileBackup.createBackup(new File(sourceFolderPath), backupFolderPath);{
+                    if (!FileBackup.createBackup(new File(sourceFolderPath), backupFolderPath)) {
+                        System.out.println("Backup process failed.");
+                    } else {
+                        System.out.println("Backup process completed successfully.");
                     }
-                }
-            } else {
-                System.out.println("Invalid path.");
-            }
-
-            if (running) {
-                System.out.print("Do you want to run the program again (yes/no)? ");
-                String againChoice = scanner.nextLine();
-                if (!againChoice.equalsIgnoreCase("yes")) {
+                    }
+                    break;
+                case 5:
                     running = false;
-                }
+                    System.out.println("Exiting the program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+                    break;
             }
-
         }
     }
-
 
     public static void getFileInformation(File file) {
         if (file.exists()) {
@@ -95,6 +109,7 @@ public class Project {
         File[] files = directory.listFiles();
 
         if (files != null) {
+            getFileInformation(directory);
             Arrays.sort(files, new Comparator<File>() {
                         public int compare(File file1, File file2) {
                             if (file1.isDirectory() && file2.isFile()) {

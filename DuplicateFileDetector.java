@@ -4,28 +4,28 @@ import java.util.*;
 
 public class DuplicateFileDetector {
 
-    public static Map<String, List<String>> hashToPathsMap = new HashMap<>();
+    public static Map<String, List<String>> hashToMap = new HashMap<>();
     public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.print("Enter directory path: ");
+        System.out.print("Enter path: ");
         String directoryPath = scanner.nextLine();
-        searchAndDetectDuplicates(new File(directoryPath));
-        printDuplicateItems();
+        detectDuplicates(new File(directoryPath));
+        printDuplicateFile();
     }
 
-    public static void searchAndDetectDuplicates(File item) {
+    public static void detectDuplicates(File item) {
         if (item.isDirectory()) {
             File[] files = item.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    searchAndDetectDuplicates(file);
+                    detectDuplicates(file);
                 }
             }
         } else {
             String hash = calculateFileHash(item);
             if (hash != null) {
-                hashToPathsMap.computeIfAbsent(hash, k -> new ArrayList<>()).add(item.getAbsolutePath());
+                hashToMap.computeIfAbsent(hash, k -> new ArrayList<>()).add(item.getAbsolutePath());
             }
         }
     }
@@ -58,10 +58,10 @@ public class DuplicateFileDetector {
         return hexString.toString();
     }
 
-    public static void printDuplicateItems() {
-        for (List<String> paths : hashToPathsMap.values()) {
+    public static void printDuplicateFile() {
+        for (List<String> paths : hashToMap.values()) {
             if (paths.size() > 1) {
-                System.out.println("Duplicate items:");
+                System.out.println("Duplicate files:");
                 for (String path : paths) {
                     System.out.println(path);
                 }

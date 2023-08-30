@@ -14,7 +14,8 @@ public class FileBackup {
             return;
         }
 
-        String backupFolderPath = "C:\\Users\\HP\\Desktop\\backup";
+        System.out.print("Enter backup directory path: ");
+        String backupFolderPath = scanner.nextLine();
 
         if (!createBackup(sourceFolder, backupFolderPath)) {
             System.out.println("Backup process failed.");
