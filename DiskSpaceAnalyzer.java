@@ -19,7 +19,7 @@ public class DiskSpaceAnalyzer {
             System.out.println("5. Quit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
